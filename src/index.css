@@ -1,0 +1,412 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bevel-xl: 26px;
+  --bevel-lg: 18px;
+  --bevel-md: 14px;
+  --bevel-sm: 10px;
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply m-0 min-h-screen overflow-x-hidden font-body antialiased;
+    background-color: #f1f5f2;
+    color: #1e2d1e;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  img {
+    @apply block max-w-full;
+  }
+}
+
+@layer components {
+  /* ─── Bevel clip-paths ─────────────────────────────────────────── */
+  .bevel-sm {
+    clip-path: polygon(var(--bevel-sm) 0, 100% 0, 100% calc(100% - var(--bevel-sm)), calc(100% - var(--bevel-sm)) 100%, 0 100%, 0 var(--bevel-sm));
+  }
+  .bevel-md {
+    clip-path: polygon(var(--bevel-md) 0, 100% 0, 100% calc(100% - var(--bevel-md)), calc(100% - var(--bevel-md)) 100%, 0 100%, 0 var(--bevel-md));
+  }
+  .bevel-lg {
+    clip-path: polygon(var(--bevel-lg) 0, 100% 0, 100% calc(100% - var(--bevel-lg)), calc(100% - var(--bevel-lg)) 100%, 0 100%, 0 var(--bevel-lg));
+  }
+  .bevel-xl {
+    clip-path: polygon(var(--bevel-xl) 0, 100% 0, 100% calc(100% - var(--bevel-xl)), calc(100% - var(--bevel-xl)) 100%, 0 100%, 0 var(--bevel-xl));
+  }
+
+  /* ─── Sidebar rail ─────────────────────────────────────────────── */
+  .app-rail-shell {
+    @apply relative overflow-hidden;
+    background-color: #0f1f3d;
+    border-right: 1px solid #0a1628;
+  }
+
+  .app-rail-shell::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, transparent 45%);
+  }
+
+  .rail-collapsed {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  /* ─── Main workspace ───────────────────────────────────────────── */
+  .workspace-shell {
+    @apply relative overflow-x-hidden overflow-y-auto;
+    background-color: #f1f5f2;
+    min-height: 100vh;
+  }
+
+  .workspace-shell-overview {
+    height: 100vh;
+    background-color: #f1f5f2;
+    overflow-y: auto;
+  }
+
+  .workspace-shell::before {
+    content: none;
+  }
+
+  .workspace-content {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 2.6rem 2.35rem 3rem;
+  }
+
+  /* ─── Cards ────────────────────────────────────────────────────── */
+  .surface-card {
+    @apply relative overflow-hidden border;
+    border-color: #d1fae5;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(20, 83, 45, 0.07);
+  }
+
+  .surface-card::before {
+    content: none;
+  }
+
+  .rail-card {
+    @apply relative overflow-hidden border backdrop-blur-sm;
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .rail-card::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 42%);
+  }
+
+  /* ─── Typography helpers ───────────────────────────────────────── */
+  .rail-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .label-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+
+  /* ─── Navigation tabs (full, desktop) ─────────────────────────── */
+  .nav-tab {
+    @apply relative inline-flex w-full items-center gap-[0.92rem] rounded-xl px-[0.35rem] py-[0.52rem] text-[1rem] font-normal transition-all duration-150;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .nav-tab::after {
+    content: none;
+  }
+
+  .nav-tab:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  .nav-tab-active {
+    background-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.92rem 1.05rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  }
+
+  .nav-tab-active::after {
+    content: none;
+  }
+
+  /* ─── Navigation tabs (icon-only, collapsed) ───────────────────── */
+  .nav-tab-collapsed {
+    @apply inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl text-[1rem] transition-all duration-150;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .nav-tab-collapsed:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  .nav-tab-collapsed-active {
+    background-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  }
+
+  /* ─── Buttons ──────────────────────────────────────────────────── */
+  .app-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition-all duration-200;
+    min-height: 44px;
+  }
+
+  .app-button:hover {
+    @apply -translate-y-0.5;
+  }
+
+  .app-button-primary {
+    @apply border;
+    border-color: #15803d;
+    background: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  }
+
+  .app-button-primary:hover {
+    background: #15803d;
+  }
+
+  .app-button-ghost {
+    @apply border;
+    border-color: #d1d5db;
+    background-color: #ffffff;
+    color: #374151;
+  }
+
+  .app-button-subtle {
+    @apply border bg-transparent;
+    border-color: #d1d5db;
+    color: #6b7280;
+  }
+
+  /* ─── Status pills ─────────────────────────────────────────────── */
+  .status-pill {
+    @apply bevel-sm inline-flex items-center justify-center px-3 font-semibold uppercase;
+    min-height: 34px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+  }
+
+  .status-neutral {
+    border: 1px solid rgba(22, 163, 74, 0.2);
+    background-color: rgba(22, 163, 74, 0.08);
+    color: #15803d;
+  }
+
+  .status-calm {
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    background-color: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+  }
+
+  .status-caution {
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+  }
+
+  .status-danger {
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+
+  /* ─── Progress ring ────────────────────────────────────────────── */
+  .progress-ring {
+    @apply relative grid w-full place-items-center rounded-full;
+    aspect-ratio: 1 / 1;
+    max-width: 214px;
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.14);
+  }
+
+  .progress-ring::before {
+    content: "";
+    @apply absolute inset-4 rounded-full border border-green-100 bg-white;
+  }
+
+  .progress-ring-inner {
+    @apply relative text-center;
+    z-index: 1;
+  }
+
+  .progress-ring-inner strong {
+    @apply block font-display font-bold tracking-tight text-slate-950;
+    font-size: 2rem;
+  }
+
+  .progress-ring-inner span {
+    @apply text-sm text-slate-500;
+  }
+
+  /* ─── Shadow utilities ─────────────────────────────────────────── */
+  .shadow-soft {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  /* ─── Overview shell ───────────────────────────────────────────── */
+  .overview-shell {
+    max-width: 920px;
+    margin: 0 auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 1.5rem 2.35rem 1.55rem;
+    display: grid;
+    align-content: start;
+    grid-template-rows: auto auto auto auto;
+    row-gap: 1.15rem;
+  }
+
+  .overview-card {
+    border: 1px solid #d1fae5;
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(20, 83, 45, 0.06);
+  }
+
+  .overview-stat-card {
+    min-height: 102px;
+    padding: 1.28rem 1.35rem 1.1rem;
+  }
+
+  .overview-panel-card {
+    padding: 1.22rem 1.35rem;
+  }
+
+  .overview-budget-card {
+    min-height: 170px;
+    padding-bottom: 1.1rem;
+  }
+
+  .overview-snapshot-card,
+  .overview-fund-card {
+    min-height: 146px;
+  }
+
+  .overview-progress-track {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: #e5e7eb;
+  }
+
+  .overview-fund-fill {
+    height: 100%;
+    border-radius: 999px;
+    background-color: #22c55e;
+  }
+
+  /* ─── Sidebar: month picker ────────────────────────────────────── */
+  .rail-month-select {
+    width: 100%;
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2393c5fd' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.1rem center;
+    background-size: 1rem;
+    padding: 0.88rem 3rem 0.88rem 1.05rem;
+    font-size: 0.96rem;
+    font-weight: 500;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    outline: none;
+  }
+
+  .rail-month-select option {
+    background-color: #1a2f5a;
+    color: #ffffff;
+  }
+
+  .rail-month-select:focus {
+    border-color: rgba(147, 197, 253, 0.4);
+    box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.12);
+  }
+
+  /* ─── Sidebar: cashflow summary card ───────────────────────────── */
+  .rail-summary-card {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 1rem;
+    background-color: rgba(0, 0, 0, 0.12);
+    padding: 1.35rem 1.2rem 1.2rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .rail-summary-kicker {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ─── Mobile + Tablet (< 1024px) ──────────────────────────────── */
+  @media (max-width: 1023px) {
+    .workspace-shell-overview {
+      height: auto;
+      min-height: 100svh;
+    }
+
+    .workspace-content {
+      max-width: none;
+      padding: 1.75rem 1.25rem 5.5rem;
+    }
+
+    .overview-shell {
+      max-width: none;
+      min-height: auto;
+      padding: 1.75rem 1.25rem 5.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .overview-stat-card,
+    .overview-panel-card {
+      padding: 1.1rem 1.05rem;
+    }
+  }
+
+  /* ─── Small mobile (< 480px) ───────────────────────────────────── */
+  @media (max-width: 479px) {
+    .workspace-content {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+
+    .overview-shell {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+  }
+}
