@@ -192,7 +192,7 @@ export function listStoredMonthKeys() {
 
 export function formatMoney(value) {
   const amount = Number(value) || 0;
-  return `£${currencyFormatter.format(amount)}`;
+  return `R${currencyFormatter.format(amount)}`;
 }
 
 export function toAmount(value) {
