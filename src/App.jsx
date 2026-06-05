@@ -24,7 +24,7 @@ import {
   createNeedRow,
   createWantRow,
   deriveHealth,
-  exportPayload,
+  exportCSV,
   formatMoney,
   getCurrentMonthKey,
   getMonthlyHistory,
@@ -54,7 +54,7 @@ const PANELS = [
 const MONTH_OPTIONS = createMonthOptions();
 
 const INPUT_CLASS =
-  "h-12 w-full rounded-xl border border-[#e5e7eb] bg-white px-4 text-[0.96rem] text-[#1e2d1e] shadow-[0_2px_8px_rgba(0,0,0,0.04)] outline-none transition focus:border-[#22c55e] focus:ring-4 focus:ring-[#22c55e]/15";
+  "h-12 w-full rounded-xl border border-[#e2e8f0] bg-white px-4 text-[0.96rem] text-[#0f172a] shadow-[0_2px_8px_rgba(0,0,0,0.04)] outline-none transition focus:border-[#68be45] focus:ring-4 focus:ring-[#68be45]/15";
 
 const factories = {
   income: createIncomeRow,
@@ -156,13 +156,13 @@ function App() {
   }
 
   function exportData() {
-    const payload = exportPayload(state, selectedMonth);
-    const blob = new Blob([payload], { type: "application/json" });
+    const payload = exportCSV(state, selectedMonth);
+    const blob = new Blob([payload], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
 
     anchor.href = url;
-    anchor.download = `my-budget-${selectedMonth}.json`;
+    anchor.download = `my-budget-${selectedMonth}.csv`;
     anchor.click();
 
     URL.revokeObjectURL(url);
@@ -183,7 +183,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f2ee]">
+    <div className="min-h-screen bg-[#f8fafc]">
       <div
         className={`grid min-h-screen ${
           railCollapsed
@@ -199,7 +199,7 @@ function App() {
           <div className="flex min-h-full flex-col">
             <div className={`flex items-center pt-1 ${railCollapsed ? "justify-center" : "justify-between gap-3"}`}>
               <h1
-                className={`font-body text-[1.56rem] font-semibold tracking-[-0.04em] text-white ${
+                className={`font-body text-[1.56rem] font-semibold tracking-[-0.04em] text-[#0f172a] ${
                   railCollapsed ? "hidden" : ""
                 }`}
               >
@@ -208,7 +208,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => setRailCollapsed((current) => !current)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-white/50 transition hover:bg-white/10"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#64748b] transition hover:bg-[rgba(104,190,69,0.12)]"
                 aria-label={railCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
                 {railCollapsed ? (
@@ -266,12 +266,27 @@ function App() {
               })}
             </nav>
 
+            {!railCollapsed && (
+              <div className="mt-auto pb-5 pt-6">
+                <img
+                  src="/assets/enableg-logo.png"
+                  alt="Enable G"
+                  className="mx-auto w-[150px]"
+                />
+              </div>
+            )}
           </div>
         </aside>
 
         <main
           className={activePanel === "overview" ? "workspace-shell-overview" : "workspace-shell"}
         >
+          {activePanel === "overview" && (
+            <div className="flex items-center justify-center border-b border-[#e2e8f0] py-4 lg:hidden">
+              <img src="/assets/enableg-logo.png" alt="Enable G" className="w-[180px] h-auto" />
+            </div>
+          )}
+
           {activePanel !== "overview" ? (
             <div className="workspace-content">
               <div className="mb-4 flex flex-wrap justify-end gap-3">
@@ -354,7 +369,7 @@ function App() {
 
       {/* Bottom navigation — visible on mobile + tablet (below 1024px) */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-[#0a1628] bg-[#0f1f3d]"
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-[rgba(104,190,69,0.2)] bg-[#f0f7ec]"
         aria-label="Planner sections"
       >
         <div className="flex">
@@ -367,7 +382,7 @@ function App() {
                 type="button"
                 onClick={() => setActivePanel(panel.id)}
                 className={`flex flex-1 flex-col items-center gap-[3px] py-2.5 px-1 transition-colors ${
-                  active ? "text-white" : "text-white/45"
+                  active ? "text-[#166534]" : "text-[#64748b]"
                 }`}
               >
                 <Icon
@@ -397,17 +412,17 @@ function OverviewPanel({ summary, health }) {
   return (
     <section className="overview-shell">
       <div className="space-y-0">
-        <h2 className="font-body text-[2.76rem] font-normal tracking-[-0.045em] text-[#1e2d1e]">
+        <h2 className="font-body text-[2.76rem] font-normal tracking-[-0.045em] text-[#0f172a]">
           Overview
         </h2>
-        <p className="text-[0.96rem] font-normal text-[#6b7280]">Your monthly budget at a glance.</p>
+        <p className="text-[0.96rem] font-normal text-[#64748b]">Your monthly budget at a glance.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <OverviewStatCard
           label="Free Cashflow"
           value={formatMoney(summary.cashflow)}
-          valueClassName={summary.cashflow >= 0 ? "text-[#16a34a]" : "text-[#dc2626]"}
+          valueClassName={summary.cashflow >= 0 ? "text-[#4a9630]" : "text-[#dc2626]"}
         />
         <OverviewStatCard label="Total Income" value={formatMoney(summary.income)} />
         <OverviewStatCard label="Total Planned Out" value={formatMoney(summary.plannedOut)} />
@@ -415,23 +430,23 @@ function OverviewPanel({ summary, health }) {
 
       <div className="overview-card overview-panel-card overview-budget-card space-y-4">
         <div className="flex items-center gap-2.5">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#c8eeaa] bg-[#f0f7ec] text-[#4a9630]">
             <CheckCircle2 className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
           </span>
-          <h3 className="text-[0.96rem] font-semibold text-[#1e2d1e]">Budget Health</h3>
-          <span className="text-[0.96rem] font-medium text-[#16a34a]">{healthLabel}</span>
+          <h3 className="text-[0.96rem] font-semibold text-[#0f172a]">Budget Health</h3>
+          <span className="text-[0.96rem] font-medium text-[#4a9630]">{healthLabel}</span>
         </div>
 
         <div className="space-y-3">
-          <OverviewProgressRow label="Essentials" value={summary.needsRatio} barClassName="bg-[#f97316]" />
-          <OverviewProgressRow label="Lifestyle" value={summary.wantsRatio} barClassName="bg-[#a855f7]" />
-          <OverviewProgressRow label="Savings" value={summary.savingsRatio} barClassName="bg-[#22c55e]" />
+          <OverviewProgressRow label="Essentials" value={summary.needsRatio} barClassName="bg-[#d97706]" />
+          <OverviewProgressRow label="Lifestyle" value={summary.wantsRatio} barClassName="bg-[#6366f1]" />
+          <OverviewProgressRow label="Savings" value={summary.savingsRatio} barClassName="bg-[#68be45]" />
         </div>
       </div>
 
       <div className="grid gap-[1.15rem] sm:grid-cols-2">
         <div className="overview-card overview-panel-card overview-snapshot-card">
-          <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-[#2a2d28]">
+          <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-[#0f172a]">
             Planner Snapshot
           </h3>
 
@@ -460,20 +475,20 @@ function OverviewPanel({ summary, health }) {
         </div>
 
         <div className="overview-card overview-panel-card overview-fund-card">
-          <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-[#2a2d28]">
+          <h3 className="text-[1.02rem] font-semibold tracking-[-0.02em] text-[#0f172a]">
             Emergency Fund
           </h3>
 
           <div className="mt-5 space-y-2.5 text-[0.98rem]">
             <div className="flex items-center justify-between gap-4">
-              <span className="text-[#7d7a74]">Current Balance</span>
-              <strong className="font-medium text-[#403830]">
+              <span className="text-[#64748b]">Current Balance</span>
+              <strong className="font-medium text-[#0f172a]">
                 {formatMoney(summary.emergencyBalance)}
               </strong>
             </div>
             <div className="flex items-center justify-between gap-4">
-              <span className="text-[#7d7a74]">Target (3x salary)</span>
-              <strong className="font-medium text-[#403830]">
+              <span className="text-[#64748b]">Target (3x salary)</span>
+              <strong className="font-medium text-[#0f172a]">
                 {formatMoney(summary.emergencyTarget)}
               </strong>
             </div>
@@ -487,7 +502,7 @@ function OverviewPanel({ summary, health }) {
               />
             </div>
             <div className="flex justify-end">
-              <span className="text-[0.82rem] font-medium text-[#b3b0aa]">
+              <span className="text-[0.82rem] font-medium text-[#94a3b8]">
                 {`${summary.emergencyProgress.toFixed(0)}% funded`}
               </span>
             </div>
@@ -498,10 +513,10 @@ function OverviewPanel({ summary, health }) {
   );
 }
 
-function OverviewStatCard({ label, value, valueClassName = "text-[#30312e]" }) {
+function OverviewStatCard({ label, value, valueClassName = "text-[#0f172a]" }) {
   return (
     <div className="overview-card overview-stat-card">
-      <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#bab7b0]">
+      <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#94a3b8]">
         {label}
       </p>
       <strong className={`mt-4 block text-[2.02rem] font-normal tracking-[-0.04em] ${valueClassName}`}>
@@ -515,8 +530,8 @@ function OverviewProgressRow({ label, value, barClassName }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-4 text-[0.98rem]">
-        <span className="text-[#6f6e68]">{label}</span>
-        <span className="font-medium text-[#5d5b57]">{`${value.toFixed(1)}%`}</span>
+        <span className="text-[#64748b]">{label}</span>
+        <span className="font-medium text-[#475569]">{`${value.toFixed(1)}%`}</span>
       </div>
       <div className="overview-progress-track">
         <div
@@ -531,11 +546,11 @@ function OverviewProgressRow({ label, value, barClassName }) {
 function SnapshotItem({ icon: Icon, value, label }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f0fdf4] text-[#16a34a]">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f0f7ec] text-[#4a9630]">
         <Icon className="h-[0.95rem] w-[0.95rem]" strokeWidth={2} />
       </span>
       <div className="space-y-0.5">
-        <strong className="block text-[1.58rem] font-normal leading-none tracking-[-0.03em] text-[#1e2d1e]">
+        <strong className="block text-[1.58rem] font-normal leading-none tracking-[-0.03em] text-[#0f172a]">
           {value}
         </strong>
         <span className="block text-[0.9rem] text-[#9ca3af]">{label}</span>
@@ -760,10 +775,10 @@ function SavingsPanel({ savings, goals, summary, onSavingsChange, onGoalAdd, onG
           <div className="flex flex-col gap-6 xl:flex-row xl:gap-8">
             <div className="space-y-2 xl:w-56 xl:shrink-0">
               <p className="label-kicker">Emergency reserve</p>
-              <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+              <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
                 Emergency fund
               </h3>
-              <p className="text-sm leading-6 text-[#6c6962]">
+              <p className="text-sm leading-6 text-[#64748b]">
                 Set the current balance and salary so the target updates automatically.
               </p>
             </div>
@@ -795,14 +810,14 @@ function SavingsPanel({ savings, goals, summary, onSavingsChange, onGoalAdd, onG
                 <MetricCard label="Remaining gap" value={formatMoney(summary.emergencyGap)} tone="warning" />
               </div>
 
-              <div className="h-3 overflow-hidden rounded-full bg-[#ece8e1]">
+              <div className="h-3 overflow-hidden rounded-full bg-[#e2e8f0]">
                 <div
-                  className="h-full rounded-full bg-[#22c55e]"
+                  className="h-full rounded-full bg-[#68be45]"
                   style={{ width: `${summary.emergencyProgress}%` }}
                 />
               </div>
               <div className="flex justify-end">
-                <span className="text-sm text-[#9a978f]">{`${summary.emergencyProgress.toFixed(0)}% funded`}</span>
+                <span className="text-sm text-[#94a3b8]">{`${summary.emergencyProgress.toFixed(0)}% funded`}</span>
               </div>
             </div>
           </div>
@@ -814,10 +829,10 @@ function SavingsPanel({ savings, goals, summary, onSavingsChange, onGoalAdd, onG
             <div className="space-y-4 xl:w-56 xl:shrink-0">
               <div className="space-y-2">
                 <p className="label-kicker">Goal planner</p>
-                <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+                <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
                   Savings goals
                 </h3>
-                <p className="text-sm leading-6 text-[#6c6962]">
+                <p className="text-sm leading-6 text-[#64748b]">
                   Each goal updates its monthly pace from the target, current balance, and deadline.
                 </p>
               </div>
@@ -843,7 +858,7 @@ function SavingsPanel({ savings, goals, summary, onSavingsChange, onGoalAdd, onG
                   title={`Goal ${index + 1}`}
                   onDelete={() => onGoalDelete("goals", index)}
                 >
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <Field label="Goal">
                       <Input
                         value={goal.goal}
@@ -877,11 +892,11 @@ function SavingsPanel({ savings, goals, summary, onSavingsChange, onGoalAdd, onG
                       />
                     </Field>
                     <Field label="Monthly needed">
-                      <div className="flex h-12 items-center rounded-xl border border-[#e5e2db] bg-[#f8f6f2] px-4 text-sm font-medium text-[#1c1c1a]">
+                      <div className="flex h-12 items-center rounded-xl border border-[#e2e8f0] bg-[#f0f7ec] px-4 text-sm font-medium text-[#0f172a]">
                         {formatMoney(calculateGoalMonthly(goal))}
                       </div>
                     </Field>
-                    <Field label="Note" className="md:col-span-2 xl:col-span-5">
+                    <Field label="Note" className="md:col-span-2">
                       <Textarea
                         value={goal.notes}
                         placeholder="Optional note"
@@ -912,7 +927,7 @@ function ReviewPanel({ summary, insights, maxForBars, monthlyHistory }) {
         <SurfaceCard className="space-y-5 p-5 md:p-6 xl:col-span-2">
           <div className="space-y-2">
             <p className="label-kicker">Monthly snapshot</p>
-            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
               This month at a glance
             </h3>
           </div>
@@ -934,23 +949,23 @@ function ReviewPanel({ summary, insights, maxForBars, monthlyHistory }) {
         <SurfaceCard className="space-y-5 p-5 md:p-6">
           <div className="space-y-2">
             <p className="label-kicker">Visual comparison</p>
-            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
               Monthly breakdown
             </h3>
           </div>
 
           <div className="grid gap-5">
-            <BarRow label="Income" value={formatMoney(summary.income)} max={maxForBars} barClass="bg-[#22c55e]" />
-            <BarRow label="Essentials" value={formatMoney(summary.needs)} max={maxForBars} barClass="bg-[#f97316]" />
-            <BarRow label="Lifestyle" value={formatMoney(summary.wants)} max={maxForBars} barClass="bg-[#a855f7]" />
-            <BarRow label="Savings" value={formatMoney(summary.monthlySavings)} max={maxForBars} barClass="bg-[#0ea5e9]" />
+            <BarRow label="Income" value={formatMoney(summary.income)} max={maxForBars} barClass="bg-[#68be45]" />
+            <BarRow label="Essentials" value={formatMoney(summary.needs)} max={maxForBars} barClass="bg-[#d97706]" />
+            <BarRow label="Lifestyle" value={formatMoney(summary.wants)} max={maxForBars} barClass="bg-[#6366f1]" />
+            <BarRow label="Savings" value={formatMoney(summary.monthlySavings)} max={maxForBars} barClass="bg-[#4a9630]" />
           </div>
         </SurfaceCard>
 
         <SurfaceCard className="space-y-5 p-5 md:p-6">
           <div className="space-y-2">
             <p className="label-kicker">Recommendations</p>
-            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+            <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
               What to focus on next
             </h3>
           </div>
@@ -961,7 +976,7 @@ function ReviewPanel({ summary, insights, maxForBars, monthlyHistory }) {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-2">
               <p className="label-kicker">Multi-month history</p>
-              <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#1c1c1a]">
+              <h3 className="font-body text-[1.7rem] font-normal tracking-[-0.04em] text-[#0f172a]">
                 How the plan has been moving
               </h3>
               <p className="max-w-2xl text-sm leading-6 text-slate-500">
@@ -1016,10 +1031,10 @@ function HistoryTrendChart({ history }) {
   }
 
   const series = [
-    { key: "income", label: "Income", color: "#22c55e" },
-    { key: "needs", label: "Essentials", color: "#f97316" },
-    { key: "wants", label: "Lifestyle", color: "#a855f7" },
-    { key: "monthlySavings", label: "Savings", color: "#0ea5e9" }
+    { key: "income", label: "Income", color: "#68be45" },
+    { key: "needs", label: "Essentials", color: "#d97706" },
+    { key: "wants", label: "Lifestyle", color: "#6366f1" },
+    { key: "monthlySavings", label: "Savings", color: "#4a9630" }
   ];
   const width = 760;
   const height = 248;
@@ -1081,7 +1096,7 @@ function HistoryTrendChart({ history }) {
                 x2={width - padding.right}
                 y1={y}
                 y2={y}
-                stroke="#e5e7eb"
+                stroke="#e2e8f0"
                 strokeDasharray="5 7"
               />
             );

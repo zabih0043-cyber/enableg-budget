@@ -443,17 +443,56 @@ export function buildInsights(summary, health) {
   return items.slice(0, 4);
 }
 
-export function exportPayload(state, monthKey = getCurrentMonthKey()) {
-  return JSON.stringify(
-    {
-      exportedAt: new Date().toISOString(),
-      monthKey,
-      monthLabel: formatMonthLabel(monthKey),
-      state,
-      summary: getSummary(state, monthKey),
-      history: getMonthlyHistory(8, monthKey, state)
-    },
-    null,
-    2
-  );
+function csvCell(value) {
+  const str = value == null ? "" : String(value);
+  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function csvRow(cells) {
+  return cells.map(csvCell).join(",");
+}
+
+export function exportCSV(state, monthKey = getCurrentMonthKey()) {
+  const lines = [];
+  const monthLabel = formatMonthLabel(monthKey);
+
+  lines.push(csvRow(["My Budget Export", monthLabel]));
+  lines.push("");
+
+  lines.push("INCOME");
+  lines.push(csvRow(["Date", "Source", "Amount", "Notes"]));
+  for (const row of state.income) {
+    lines.push(csvRow([row.date, row.source, row.amount, row.notes]));
+  }
+  lines.push("");
+
+  lines.push("NEEDS");
+  lines.push(csvRow(["Item", "Cost", "Priority", "Due"]));
+  for (const row of state.needs) {
+    lines.push(csvRow([row.item, row.cost, row.priority, row.due]));
+  }
+  lines.push("");
+
+  lines.push("WANTS");
+  lines.push(csvRow(["Item", "Cost", "Notes"]));
+  for (const row of state.wants) {
+    lines.push(csvRow([row.item, row.cost, row.notes]));
+  }
+  lines.push("");
+
+  lines.push("SAVINGS GOALS");
+  lines.push(csvRow(["Goal", "Target", "Saved", "Deadline", "Notes"]));
+  for (const row of state.goals) {
+    lines.push(csvRow([row.goal, row.targetAmount, row.currentSavings, row.deadline, row.notes]));
+  }
+  lines.push("");
+
+  lines.push("SAVINGS SETTINGS");
+  lines.push(csvRow(["Emergency Balance", "Monthly Salary"]));
+  lines.push(csvRow([state.savings.emergencyBalance, state.savings.monthlySalary]));
+
+  return lines.join("\n");
 }
