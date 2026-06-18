@@ -23,14 +23,17 @@ import {
   createIncomeRow,
   createNeedRow,
   createWantRow,
+  CURRENCIES,
   deriveHealth,
   exportCSV,
   formatMoney,
   getCurrentMonthKey,
   getMonthlyHistory,
   getSummary,
+  loadCurrency,
   loadState,
-  saveState
+  saveState,
+  setActiveCurrency
 } from "./lib/money";
 import {
   BarRow,
@@ -79,6 +82,7 @@ function App() {
   const [activePanel, setActivePanel] = useState("overview");
   const [railCollapsed, setRailCollapsed] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonthKey());
+  const [currency, setCurrency] = useState(() => loadCurrency());
   const [state, setState] = useState(() => loadState(getCurrentMonthKey()));
 
   useEffect(() => {
@@ -107,6 +111,15 @@ function App() {
     setSelectedMonth(nextMonth);
     setState(loadState(nextMonth));
     setActivePanel("overview");
+  }
+
+  function handleCurrencyChange(nextCurrency) {
+    if (nextCurrency === currency) {
+      return;
+    }
+
+    setActiveCurrency(nextCurrency);
+    setCurrency(nextCurrency);
   }
 
   function updateRow(group, index, field, value) {
@@ -162,7 +175,7 @@ function App() {
     const anchor = document.createElement("a");
 
     anchor.href = url;
-    anchor.download = `my-budget-${selectedMonth}.csv`;
+    anchor.download = `budget-app-${selectedMonth}.csv`;
     anchor.click();
 
     URL.revokeObjectURL(url);
@@ -203,7 +216,7 @@ function App() {
                   railCollapsed ? "hidden" : ""
                 }`}
               >
-                My Budget
+                Budget App
               </h1>
               <button
                 type="button"
@@ -362,7 +375,12 @@ function App() {
           ) : null}
 
           {activePanel === "overview" ? (
-            <OverviewPanel summary={summary} health={health} />
+            <OverviewPanel
+              summary={summary}
+              health={health}
+              currency={currency}
+              onCurrencyChange={handleCurrencyChange}
+            />
           ) : null}
         </main>
       </div>
@@ -399,7 +417,7 @@ function App() {
   );
 }
 
-function OverviewPanel({ summary, health }) {
+function OverviewPanel({ summary, health, currency, onCurrencyChange }) {
   const healthLabel =
     health.tone === "calm"
       ? "On Track"
@@ -411,11 +429,43 @@ function OverviewPanel({ summary, health }) {
 
   return (
     <section className="overview-shell">
-      <div className="space-y-0">
-        <h2 className="font-body text-[2.76rem] font-normal tracking-[-0.045em] text-[#0f172a]">
-          Overview
-        </h2>
-        <p className="text-[0.96rem] font-normal text-[#64748b]">Your monthly budget at a glance.</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-0">
+          <h2 className="font-body text-[2.76rem] font-normal tracking-[-0.045em] text-[#0f172a]">
+            Overview
+          </h2>
+          <p className="text-[0.96rem] font-normal text-[#64748b]">Your monthly budget at a glance.</p>
+        </div>
+
+        <div className="w-full sm:w-auto">
+          <label
+            htmlFor="planner-currency"
+            className="mb-1.5 block text-[0.8rem] font-medium text-[#64748b]"
+          >
+            Currency
+          </label>
+          <select
+            id="planner-currency"
+            value={currency}
+            onChange={(e) => onCurrencyChange(e.target.value)}
+            className="rail-month-select w-full sm:w-[230px]"
+          >
+            <optgroup label="Common">
+              {CURRENCIES.filter((option) => option.pinned).map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.symbol} · {option.label}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="All currencies">
+              {CURRENCIES.filter((option) => !option.pinned).map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.symbol} · {option.label}
+                </option>
+              ))}
+            </optgroup>
+          </select>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

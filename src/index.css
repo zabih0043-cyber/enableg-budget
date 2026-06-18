@@ -16,8 +16,8 @@
 
   body {
     @apply m-0 min-h-screen overflow-x-hidden font-body antialiased;
-    background-color: #f1f5f2;
-    color: #1e2d1e;
+    background-color: #f8fafc;
+    color: #0f172a;
   }
 
   button,
@@ -50,14 +50,14 @@
   /* ─── Sidebar rail ─────────────────────────────────────────────── */
   .app-rail-shell {
     @apply relative overflow-hidden;
-    background-color: #0f1f3d;
-    border-right: 1px solid #0a1628;
+    background-color: #f0f7ec;
+    border-right: 1px solid rgba(104, 190, 69, 0.2);
   }
 
   .app-rail-shell::before {
     content: "";
     @apply pointer-events-none absolute inset-0;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, transparent 45%);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.4) 0%, transparent 45%);
   }
 
   .rail-collapsed {
@@ -68,13 +68,13 @@
   /* ─── Main workspace ───────────────────────────────────────────── */
   .workspace-shell {
     @apply relative overflow-x-hidden overflow-y-auto;
-    background-color: #f1f5f2;
+    background-color: #f8fafc;
     min-height: 100vh;
   }
 
   .workspace-shell-overview {
     height: 100vh;
-    background-color: #f1f5f2;
+    background-color: #f8fafc;
     overflow-y: auto;
   }
 
@@ -91,9 +91,9 @@
   /* ─── Cards ────────────────────────────────────────────────────── */
   .surface-card {
     @apply relative overflow-hidden border;
-    border-color: #d1fae5;
+    border-color: rgba(226, 232, 240, 0.95);
     background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(20, 83, 45, 0.07);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(15, 23, 42, 0.07);
   }
 
   .surface-card::before {
@@ -102,14 +102,14 @@
 
   .rail-card {
     @apply relative overflow-hidden border backdrop-blur-sm;
-    border-color: rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(104, 190, 69, 0.15);
+    background-color: rgba(255, 255, 255, 0.5);
   }
 
   .rail-card::before {
     content: "";
     @apply pointer-events-none absolute inset-0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 42%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 42%);
   }
 
   /* ─── Typography helpers ───────────────────────────────────────── */
@@ -118,7 +118,7 @@
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
+    color: #64748b;
   }
 
   .label-kicker {
@@ -132,7 +132,7 @@
   /* ─── Navigation tabs (full, desktop) ─────────────────────────── */
   .nav-tab {
     @apply relative inline-flex w-full items-center gap-[0.92rem] rounded-xl px-[0.35rem] py-[0.52rem] text-[1rem] font-normal transition-all duration-150;
-    color: rgba(255, 255, 255, 0.68);
+    color: #166534;
   }
 
   .nav-tab::after {
@@ -140,16 +140,16 @@
   }
 
   .nav-tab:hover {
-    background-color: rgba(255, 255, 255, 0.14);
-    color: #ffffff;
+    background-color: rgba(104, 190, 69, 0.12);
+    color: #0f172a;
   }
 
   .nav-tab-active {
-    background-color: rgba(255, 255, 255, 0.22);
+    background-color: #68be45;
     color: #ffffff;
     font-weight: 600;
     padding: 0.92rem 1.05rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 10px rgba(104, 190, 69, 0.28);
   }
 
   .nav-tab-active::after {
@@ -159,18 +159,18 @@
   /* ─── Navigation tabs (icon-only, collapsed) ───────────────────── */
   .nav-tab-collapsed {
     @apply inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl text-[1rem] transition-all duration-150;
-    color: rgba(255, 255, 255, 0.68);
+    color: #166534;
   }
 
   .nav-tab-collapsed:hover {
-    background-color: rgba(255, 255, 255, 0.14);
-    color: #ffffff;
+    background-color: rgba(104, 190, 69, 0.12);
+    color: #0f172a;
   }
 
   .nav-tab-collapsed-active {
-    background-color: rgba(255, 255, 255, 0.22);
+    background-color: #68be45;
     color: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 10px rgba(104, 190, 69, 0.28);
   }
 
   /* ─── Buttons ──────────────────────────────────────────────────── */
@@ -185,27 +185,27 @@
 
   .app-button-primary {
     @apply border;
-    border-color: #15803d;
-    background: #16a34a;
+    border-color: #4a9630;
+    background: #68be45;
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    box-shadow: 0 4px 14px rgba(104, 190, 69, 0.35);
   }
 
   .app-button-primary:hover {
-    background: #15803d;
+    background: #4a9630;
   }
 
   .app-button-ghost {
     @apply border;
-    border-color: #d1d5db;
+    border-color: #e2e8f0;
     background-color: #ffffff;
-    color: #374151;
+    color: #0f172a;
   }
 
   .app-button-subtle {
     @apply border bg-transparent;
-    border-color: #d1d5db;
-    color: #6b7280;
+    border-color: #e2e8f0;
+    color: #64748b;
   }
 
   /* ─── Status pills ─────────────────────────────────────────────── */
@@ -217,15 +217,15 @@
   }
 
   .status-neutral {
-    border: 1px solid rgba(22, 163, 74, 0.2);
-    background-color: rgba(22, 163, 74, 0.08);
-    color: #15803d;
+    border: 1px solid rgba(104, 190, 69, 0.2);
+    background-color: rgba(104, 190, 69, 0.1);
+    color: #4a9630;
   }
 
   .status-calm {
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    background-color: rgba(34, 197, 94, 0.12);
-    color: #15803d;
+    border: 1px solid rgba(104, 190, 69, 0.28);
+    background-color: rgba(104, 190, 69, 0.14);
+    color: #4a9630;
   }
 
   .status-caution {
@@ -245,7 +245,7 @@
     @apply relative grid w-full place-items-center rounded-full;
     aspect-ratio: 1 / 1;
     max-width: 214px;
-    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.14);
+    box-shadow: 0 8px 24px rgba(104, 190, 69, 0.14);
   }
 
   .progress-ring::before {
@@ -286,10 +286,10 @@
   }
 
   .overview-card {
-    border: 1px solid #d1fae5;
+    border: 1px solid rgba(226, 232, 240, 0.95);
     border-radius: 0.75rem;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(20, 83, 45, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
   }
 
   .overview-stat-card {
@@ -315,51 +315,51 @@
     height: 8px;
     overflow: hidden;
     border-radius: 999px;
-    background-color: #e5e7eb;
+    background-color: #e2e8f0;
   }
 
   .overview-fund-fill {
     height: 100%;
     border-radius: 999px;
-    background-color: #22c55e;
+    background-color: #68be45;
   }
 
   /* ─── Sidebar: month picker ────────────────────────────────────── */
   .rail-month-select {
     width: 100%;
     appearance: none;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(104, 190, 69, 0.25);
     border-radius: 0.75rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2393c5fd' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E");
+    background-color: rgba(255, 255, 255, 0.7);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%234a9630' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1.1rem center;
     background-size: 1rem;
     padding: 0.88rem 3rem 0.88rem 1.05rem;
     font-size: 0.96rem;
     font-weight: 500;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #0f172a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     outline: none;
   }
 
   .rail-month-select option {
-    background-color: #1a2f5a;
-    color: #ffffff;
+    background-color: #f0f7ec;
+    color: #0f172a;
   }
 
   .rail-month-select:focus {
-    border-color: rgba(147, 197, 253, 0.4);
-    box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.12);
+    border-color: rgba(104, 190, 69, 0.5);
+    box-shadow: 0 0 0 3px rgba(104, 190, 69, 0.12);
   }
 
   /* ─── Sidebar: cashflow summary card ───────────────────────────── */
   .rail-summary-card {
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(104, 190, 69, 0.2);
     border-radius: 1rem;
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(255, 255, 255, 0.55);
     padding: 1.35rem 1.2rem 1.2rem;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   .rail-summary-kicker {
@@ -367,7 +367,7 @@
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
+    color: #64748b;
   }
 
   /* ─── Mobile + Tablet (< 1024px) ──────────────────────────────── */

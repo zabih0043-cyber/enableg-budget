@@ -1,5 +1,120 @@
 const STORAGE_PREFIX = "enableg-money-planner-v4";
 const LEGACY_STORAGE_KEY = "enableg-money-planner-v3";
+const CURRENCY_STORAGE_KEY = `${STORAGE_PREFIX}:currency`;
+
+const DEFAULT_CURRENCY_CODE = "ZAR";
+
+// A handful of common currencies are pinned to the top of the list so the most
+// likely choices are reachable without scrolling. Everything else follows
+// alphabetically by name.
+const PINNED_CURRENCY_CODES = [
+  "ZAR", "USD", "EUR", "GBP", "INR", "NGN", "KES", "GHS",
+  "AUD", "CAD", "AED", "BRL", "JPY", "CNY"
+];
+
+// Minimal fallback used if the runtime can't enumerate ISO 4217 currencies
+// (very old browsers). The generated list below normally supersedes this.
+const FALLBACK_CURRENCY_CODES = [
+  "ZAR", "USD", "EUR", "GBP", "INR", "NGN", "KES", "AUD", "CAD", "JPY"
+];
+
+function currencySymbolFor(code) {
+  try {
+    const parts = new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: code,
+      currencyDisplay: "narrowSymbol"
+    }).formatToParts(0);
+
+    const symbolPart = parts.find((part) => part.type === "currency");
+
+    if (symbolPart && symbolPart.value) {
+      return symbolPart.value;
+    }
+  } catch {
+    // Unsupported currency code; fall back to the code itself below.
+  }
+
+  return code;
+}
+
+function buildCurrencyList() {
+  let codes;
+
+  try {
+    codes = Intl.supportedValuesOf("currency");
+  } catch {
+    codes = FALLBACK_CURRENCY_CODES;
+  }
+
+  let displayNames = null;
+
+  try {
+    displayNames = new Intl.DisplayNames(["en"], { type: "currency" });
+  } catch {
+    displayNames = null;
+  }
+
+  const currencies = codes.map((code) => ({
+    code,
+    symbol: currencySymbolFor(code),
+    label: (displayNames && displayNames.of(code)) || code
+  }));
+
+  const pinned = PINNED_CURRENCY_CODES
+    .map((code) => currencies.find((currency) => currency.code === code))
+    .filter(Boolean)
+    .map((currency) => ({ ...currency, pinned: true }));
+
+  const pinnedCodes = new Set(pinned.map((currency) => currency.code));
+
+  const rest = currencies
+    .filter((currency) => !pinnedCodes.has(currency.code))
+    .map((currency) => ({ ...currency, pinned: false }))
+    .sort((left, right) => left.label.localeCompare(right.label));
+
+  return [...pinned, ...rest];
+}
+
+export const CURRENCIES = buildCurrencyList();
+
+let activeCurrencyCode = DEFAULT_CURRENCY_CODE;
+
+export function getCurrencyByCode(code) {
+  return CURRENCIES.find((currency) => currency.code === code) || CURRENCIES[0];
+}
+
+export function getActiveCurrency() {
+  return getCurrencyByCode(activeCurrencyCode);
+}
+
+export function loadCurrency() {
+  try {
+    const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
+
+    if (stored && CURRENCIES.some((currency) => currency.code === stored)) {
+      activeCurrencyCode = stored;
+    }
+  } catch {
+    // Ignore unavailable storage and fall back to the default currency.
+  }
+
+  return activeCurrencyCode;
+}
+
+export function setActiveCurrency(code) {
+  if (CURRENCIES.some((currency) => currency.code === code)) {
+    activeCurrencyCode = code;
+
+    try {
+      localStorage.setItem(CURRENCY_STORAGE_KEY, code);
+    } catch {
+      // Ignore unavailable storage; the in-memory choice still applies.
+    }
+  }
+
+  return getActiveCurrency();
+}
 
 export function createIncomeRow() {
   return { date: "", source: "", amount: "", notes: "" };
@@ -192,7 +307,7 @@ export function listStoredMonthKeys() {
 
 export function formatMoney(value) {
   const amount = Number(value) || 0;
-  return `R${currencyFormatter.format(amount)}`;
+  return `${getActiveCurrency().symbol}${currencyFormatter.format(amount)}`;
 }
 
 export function toAmount(value) {
@@ -459,7 +574,7 @@ export function exportCSV(state, monthKey = getCurrentMonthKey()) {
   const lines = [];
   const monthLabel = formatMonthLabel(monthKey);
 
-  lines.push(csvRow(["My Budget Export", monthLabel]));
+  lines.push(csvRow(["Budget App Export", monthLabel]));
   lines.push("");
 
   lines.push("INCOME");

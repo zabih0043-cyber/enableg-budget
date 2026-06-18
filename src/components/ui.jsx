@@ -17,15 +17,15 @@ export function PanelHeader({ eyebrow, title, description, action }) {
     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
       <div className="space-y-2">
         {eyebrow ? (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6b7280]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#64748b]">
             {eyebrow}
           </p>
         ) : null}
-        <h3 className="font-body text-[2.5rem] font-normal tracking-[-0.045em] text-[#1e2d1e]">
+        <h3 className="font-body text-[2.5rem] font-normal tracking-[-0.045em] text-[#0f172a]">
           {title}
         </h3>
         {description ? (
-          <p className="max-w-2xl text-[0.98rem] leading-7 text-[#6b7280]">
+          <p className="max-w-2xl text-[0.98rem] leading-7 text-[#64748b]">
             {description}
           </p>
         ) : null}
@@ -38,7 +38,7 @@ export function PanelHeader({ eyebrow, title, description, action }) {
 export function Field({ label, className = "", children }) {
   return (
     <label className={joinClasses("block space-y-2", className)}>
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#64748b]">
         {label}
       </span>
       {children}
@@ -51,17 +51,17 @@ export function MetricCard({ label, value, tone = "default", className = "" }) {
     <div
       className={joinClasses(
         "rounded-lg border px-4 py-4 shadow-soft transition-all duration-200",
-        tone === "success" && "border-[#bbf7d0] bg-[#f0fdf4]",
+        tone === "success" && "border-[#c8eeaa] bg-[#f0f7ec]",
         tone === "warning" && "border-[#fde68a] bg-[#fffbeb]",
         tone === "danger"  && "border-[#fecaca] bg-[#fef2f2]",
-        tone === "default" && "border-[#e5e7eb] bg-white",
+        tone === "default" && "border-[#e2e8f0] bg-white",
         className
       )}
     >
-      <span className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6b7280]">
+      <span className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#64748b]">
         {label}
       </span>
-      <strong className="mt-2 block font-body text-[1.75rem] font-normal tracking-[-0.04em] text-[#1e2d1e]">
+      <strong className="mt-2 block font-body text-[1.75rem] font-normal tracking-[-0.04em] text-[#0f172a]">
         {value}
       </strong>
     </div>
@@ -74,13 +74,13 @@ export function StatusPill({ tone, children }) {
 
 export function RowCard({ title, subtitle, onDelete, children }) {
   return (
-    <div className="rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-soft transition-all duration-200 hover:border-[#bbf7d0] hover:shadow-md">
-      <div className="mb-5 flex flex-col gap-3 border-b border-[#f3f4f6] pb-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="rounded-xl border border-[#e2e8f0] bg-white p-5 shadow-soft transition-all duration-200 hover:border-[#c8eeaa] hover:shadow-md">
+      <div className="mb-5 flex flex-col gap-3 border-b border-[#e2e8f0] pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h4 className="font-body text-[1.1rem] font-medium tracking-[-0.03em] text-[#1e2d1e]">
+          <h4 className="font-body text-[1.1rem] font-medium tracking-[-0.03em] text-[#0f172a]">
             {title}
           </h4>
-          {subtitle ? <p className="mt-1 text-sm text-[#6b7280]">{subtitle}</p> : null}
+          {subtitle ? <p className="mt-1 text-sm text-[#64748b]">{subtitle}</p> : null}
         </div>
         <button
           type="button"
@@ -103,7 +103,7 @@ export function InsightList({ items, compact = false }) {
         <li
           key={item}
           className={joinClasses(
-            "rounded-lg border border-[#d1fae5] bg-[#f0fdf4] text-[#374151] shadow-soft",
+            "rounded-lg border border-[#d4f0c4] bg-[#f0f7ec] text-[#0f172a] shadow-soft",
             compact ? "px-4 py-3 text-sm" : "px-4 py-4 text-sm"
           )}
         >
@@ -119,7 +119,7 @@ export function ProgressRing({ progress, label }) {
     <div
       className="progress-ring mx-auto"
       style={{
-        background: `conic-gradient(#22c55e ${Math.max(0, Math.min(progress, 100))}%, #e5e7eb 0)`
+        background: `conic-gradient(#68be45 ${Math.max(0, Math.min(progress, 100))}%, #e2e8f0 0)`
       }}
     >
       <div className="progress-ring-inner">
@@ -136,12 +136,12 @@ export function BarRow({ label, value, max, barClass }) {
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-[#6b7280]">{label}</span>
-        <strong className="font-body text-base font-medium tracking-[-0.03em] text-[#1e2d1e]">
+        <span className="text-sm font-medium text-[#64748b]">{label}</span>
+        <strong className="font-body text-base font-medium tracking-[-0.03em] text-[#0f172a]">
           {value}
         </strong>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-[#e5e7eb]">
+      <div className="h-3 overflow-hidden rounded-full bg-[#e2e8f0]">
         <div className={joinClasses("h-full rounded-full", barClass)} style={{ width }} />
       </div>
     </div>
