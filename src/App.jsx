@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownToLine,
   ChevronLeft,
@@ -84,10 +84,21 @@ function App() {
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonthKey());
   const [currency, setCurrency] = useState(() => loadCurrency());
   const [state, setState] = useState(() => loadState(getCurrentMonthKey()));
+  const mainRef = useRef(null);
 
   useEffect(() => {
     saveState(selectedMonth, state);
   }, [selectedMonth, state]);
+
+  // When switching panels, start the new page from the top rather than
+  // keeping the previous scroll position (most noticeable on mobile/tablet).
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, left: 0 });
+    }
+
+    window.scrollTo({ top: 0, left: 0 });
+  }, [activePanel]);
 
   const summary = getSummary(state, selectedMonth);
   const health = deriveHealth(summary);
@@ -292,6 +303,7 @@ function App() {
         </aside>
 
         <main
+          ref={mainRef}
           className={activePanel === "overview" ? "workspace-shell-overview" : "workspace-shell"}
         >
           {activePanel === "overview" && (
